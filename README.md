@@ -12,7 +12,16 @@
 
 
 ## Spring Cloud实战项目
-  整个实战项目分为以下几部分：
+
+  项目的需求是开发一个电商网站后台，根据业务将系统拆分为用户服务、商品服务、订单服务、积分服务等。项目的目的是为了实战Spring Cloud的主要组件，因此并没有将所有服务都开发得很完善，但一个微服务系统应具备的要素已经齐了：**注册中心、配置中心、各个服务（包括服务间调用、负载均衡、熔断降级、链路追踪）、网关、服务打包、容器部署**。整个项目分为以下几部分：
+  
+  [eureka_server](https://github.com/pwalan/eureka_server.git): 服务注册中心
+  
+  [config_server](https://github.com/pwalan/config-server.git): 配置中心
+  
+  [product_service](https://github.com/pwalan/product_service.git): 商品服务
+  
+  [order_service]()
   
   
 ### 服务注册发现
@@ -23,6 +32,7 @@
 
 ### 服务降级与熔断
 
+![test](material/hystrix_show1.png)
 
 ### 微服务网关
 
