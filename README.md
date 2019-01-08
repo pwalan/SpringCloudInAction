@@ -15,15 +15,15 @@
 
   项目的需求是开发一个电商网站后台，根据业务将系统拆分为用户服务、商品服务、订单服务、积分服务等。项目的目的是为了实战Spring Cloud的主要组件，因此并没有将所有服务都开发得很完善，但一个微服务系统应具备的要素已经齐了：**注册中心、配置中心、各个服务（包括服务间调用、负载均衡、熔断降级、链路追踪）、网关、服务打包、容器部署**。整个项目分为以下几部分：
   
-  [eureka_server](https://github.com/pwalan/eureka_server.git): 服务注册中心
+  - [eureka_server](https://github.com/pwalan/eureka_server.git) 服务注册中心：每个服务都需要在服务注册中心进行注册，并可以获取其他服务的地址。
   
-  [config_server](https://github.com/pwalan/config-server.git): 配置中心
+  - [config_server](https://github.com/pwalan/config-server.git) 配置中心：每个服务的配置（如端口、数据库配置），除去基本配置（如eureka的地址等），都可以放到配置中心进行统一管理。配置中心可以和消息队列配合，做到动态更新各个服务的配置。
   
-  [product_service](https://github.com/pwalan/product_service.git): 商品服务
+  - [product_service](https://github.com/pwalan/product_service.git) 商品服务：提供展示商品列表和查询商品详情的接口。
   
-  [order_service](https://github.com/pwalan/order_service.git): 订单服务
+  - [order_service](https://github.com/pwalan/order_service.git) 订单服务：提供下单接口，需要调用商品服务。
   
-  [api-ga](): 
+  - [api-gateway](https://github.com/pwalan/api-gateway.git) 网关：提供统一的对外接口，隔离内外网；提供路由功能，转发请求；进行权限验证和身份校验；并能够限流。
   
 ### 服务注册发现
 
@@ -33,7 +33,7 @@
 
 ### 服务降级与熔断
 
-![test](material/hystrix_show1.png)
+![熔断结果](material/hystrix_show1.png)
 
 ### 微服务网关
 
