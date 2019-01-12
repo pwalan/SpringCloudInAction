@@ -76,18 +76,54 @@ Ribbon的负载均衡策略，默认是Round-Robin，不过可以通过配置文
 
 Spring Cloud中熔断降级一般使用[Hystrix](https://github.com/Netflix/Hystrix)。
 
-### 4.微服务网关
+使用Hystrix进行熔断：
+* 在需要熔断服务的启动类中添加 ```@EnableCircuitBreaker```
+* 在需要熔断的方法(调用了其他服务的方法)上添加```@HystrixCommand(fallbackMethod = "xxxFail")```
+* 实现```xxxFail()```方法，在此方法中完成熔断处理，给服务调用方返回兜底数据，并进行报警通知
 
+使用Hystrix进行服务降级(与Feign结合)：
+* 修改FeignClient的注解```@FeignClient(name="xxx", fallback=XXXFullBack.class )```
+* 实现```XXXFullBack```类，实现相应的FeignClient接口，进行服务降级处理
+
+下面演示服务熔断与降级。如下图，订单服务下单时需要调用商品服务，如果Eureka中没有任何商品服务，调用时就会展示兜底数据并进行报警。
+
+### 4.微服务网关
+网关，API Gateway，是系统的唯一对外的入口，介于客户端和服务器端之间的中间层，处理非业务功能 提供路由请求、鉴权、监控、缓存、限流等功能。
+
+Spring Cloud使用Zuul作为网关。
+
+使用Zuul：
+* 新建项目
+* 启动类加入注解```@EnableZuulProxy```
+* 在配置文件中添加访问规则、路由规则、隔离规则
+* 可选：通过继承```ZuulFilter```实现登录鉴权和服务接口限流
+
+下面展示网关服务启动后的效果。之前访问各个服务都是使用服务自己的端口(如8771、8781)，而生产环境各个服务会部署在内网中，这时就不能通过服务自己的端口访问服务了(不安全)，需使用网关服务提供统一的对外端口，同时实现登录鉴权(请求中有无token)。
 
 ### 5.分布式链路追踪
+分布式链路追踪在微服务中十分重要，是快速定位故障、分析各个调用环节性能的基础。
 
+Spring Cloud中使用[Sleuth](http://cloud.spring.io/spring-cloud-static/Finchley.SR1/single/spring-cloud.html#sleuth-adding-project)进行链路追踪，同时可以结合[Zipkin](https://zipkin.io/)进行可视化的调用链路查看及耗时分析。
+
+使用效果如下图所示：
 
 ### 6.配置中心
+使用配置中心是为了统一管理配置, 快速切换各个环境的配置。
 
+Spring Cloud使用[Config Server](http://cloud.spring.io/spring-cloud-config/)作为配置中心。
 
-### 7.消息总线与消息队列
+使用Config Server:
+* 新建项目
+* 启动类增加注解```@EnableConfigServer```
+* 配置一个git地址[config_cloud](https://gitee.com/pwalan/config_cloud.git)存放各个配置文件
+* 要实现更改config_cloud中的配置后通知相应的服务进行更新，需要使用消息队列(这里使用RabbitMQ)，并在各个服务中配置消息队列的地址，并暴露全部的监控信息
 
+下面演示更新配置后通知服务更新配置。
+* 商品服务的当前环境
+* 修改环境信息
+* 发送更新通知
+* 查看是否更新成功
 
-### 8.服务打包与容器部署
-
-
+### 7.服务打包与容器部署
+目前常用的微服务部署方式都是使用Docker，因此可以使用Docker的Maven插件来打包服务，同时可以使用阿里云[容器镜像服务](https://www.aliyun.com/product/acr)来建立私有的镜像仓库来管理服务的Docker镜像和部署应用，如下图所示。
+![images](material/8-repository.png)
