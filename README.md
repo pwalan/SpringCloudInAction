@@ -131,11 +131,11 @@ Spring Cloud使用[Config Server](http://cloud.spring.io/spring-cloud-config/)�
 * 要实现更改config_cloud中的配置后通知相应的服务进行更新，需要使用消息队列(这里使用RabbitMQ)，并在各个服务中配置消息队列的地址，并暴露全部的监控信息
 
 下面演示更新配置后通知服务更新配置。
-* 商品服务的当前环境
+* 商品服务的当前环境为“dev”
 ![6-1-1](material/6-1-1.png)
 ![6-1](material/6-1.png)
 
-* 修改环境信息</br>
+* 修改环境信息,将“env:dev”改为“env:dev2018”</br>
 ![6-2](material/6-2.png)
 
 * 发送更新通知
