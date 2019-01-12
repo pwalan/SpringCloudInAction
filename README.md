@@ -50,13 +50,16 @@ Spring Cloud中有Ribbon和Feign两个组件支持服务间调用，二者都是
 * 写起来更加思路清晰和方便
 * 采用注解方式进行配置，配置熔断(下一节将介绍)等方式方便
 
-Ribbon的负载均衡策略，默认是Round-Robin，不过可以通过配置文件进行设置，也可以[自定义负载均衡策略](http://cloud.spring.io/spring-cloud-static/Finchley.RELEASE/single/spring-cloud.html#_customizing_the_ribbon_client_by_setting_properties)。如下图所示，在Eureka上注册了3个商品服务，然后进行多次查询商品详情，可以看到每次请求都是不同的端口,而且是有序的，说明了其负载均衡策略是Round-Robin。
-
-
 下面说明一下使用Feign后，订单服务如何调用商品服务进行下单：
 * 在启动类中添加 ```@EnableFeignClients```
 * 在service包中添加一个商品服务的接口，并添加```@FeignClient(name="product-service")```，如下图所示![interface](material/2-interface.png)
 * 在要用到商品服务的地方进行注入，然后调用即可，如下图所示![interface](material/2-autowired.png)
+
+Ribbon的负载均衡策略，默认是Round-Robin，不过可以通过配置文件进行设置，也可以[自定义负载均衡策略](http://cloud.spring.io/spring-cloud-static/Finchley.RELEASE/single/spring-cloud.html#_customizing_the_ribbon_client_by_setting_properties)。如下图所示，在Eureka上注册了3个商品服务和1个订单服务，然后进行多次下单，可以看到每次请求都是不同的端口,而且是有序的，说明了其负载均衡策略是Round-Robin。
+![2-eureka](material/2-eureka.png)
+![2-save1](material/2-save1.png)
+![2-save2](material/2-save2.png)
+![2-save3](material/2-save3.png)
 
 
 ### 3.服务熔断与降级
@@ -85,7 +88,11 @@ Spring Cloud中熔断降级一般使用[Hystrix](https://github.com/Netflix/Hyst
 * 修改FeignClient的注解```@FeignClient(name="xxx", fallback=XXXFullBack.class )```
 * 实现```XXXFullBack```类，实现相应的FeignClient接口，进行服务降级处理
 
-下面演示服务熔断与降级。如下图，订单服务下单时需要调用商品服务，如果Eureka中没有任何商品服务，调用时就会展示兜底数据并进行报警。
+下面演示服务熔断与降级。如下图，订单服务下单时需要调用商品服务，如果Eureka中没有任何商品服务或商品服务都Down了，调用时就会展示兜底数据并进行报警。
+![3-eureka](material/3-eureka.png)
+![3-web](material/3-web.png)
+![3-warning](material/3-warning.png)
+
 
 ### 4.微服务网关
 网关，API Gateway，是系统的唯一对外的入口，介于客户端和服务器端之间的中间层，处理非业务功能 提供路由请求、鉴权、监控、缓存、限流等功能。
@@ -99,6 +106,10 @@ Spring Cloud使用Zuul作为网关。
 * 可选：通过继承```ZuulFilter```实现登录鉴权和服务接口限流
 
 下面展示网关服务启动后的效果。之前访问各个服务都是使用服务自己的端口(如8771、8781)，而生产环境各个服务会部署在内网中，这时就不能通过服务自己的端口访问服务了(不安全)，需使用网关服务提供统一的对外端口，同时实现登录鉴权(请求中有无token)。
+![4-product](material/4-product.png)
+![4-token](material/4-token.png)
+* 无token的话无法访问
+![4-notoken](material/4-notoken.png)
 
 ### 5.分布式链路追踪
 分布式链路追踪在微服务中十分重要，是快速定位故障、分析各个调用环节性能的基础。
@@ -120,10 +131,18 @@ Spring Cloud使用[Config Server](http://cloud.spring.io/spring-cloud-config/)�
 
 下面演示更新配置后通知服务更新配置。
 * 商品服务的当前环境
+![6-1](material/6-1.png)
+![6-1-1](material/6-1-1.png)
+
 * 修改环境信息
+![6-2](material/6-2.png)
+
 * 发送更新通知
+![6-3](material/6-3.png)
+
 * 查看是否更新成功
+![6-4](material/6-4.png)
 
 ### 7.服务打包与容器部署
-目前常用的微服务部署方式都是使用Docker，因此可以使用Docker的Maven插件来打包服务，同时可以使用阿里云[容器镜像服务](https://www.aliyun.com/product/acr)来建立私有的镜像仓库来管理服务的Docker镜像和部署应用，如下图所示。
+目前常用的微服务部署方式是使用Docker，因此可以使用Docker的Maven插件来打包服务，同时可以使用阿里云[容器镜像服务](https://www.aliyun.com/product/acr)来建立私有的镜像仓库来管理服务的Docker镜像和部署应用，如下图所示。
 ![images](material/8-repository.png)
