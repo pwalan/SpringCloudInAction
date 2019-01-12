@@ -117,6 +117,7 @@ Spring Cloud使用Zuul作为网关。
 Spring Cloud中使用[Sleuth](http://cloud.spring.io/spring-cloud-static/Finchley.SR1/single/spring-cloud.html#sleuth-adding-project)进行链路追踪，同时可以结合[Zipkin](https://zipkin.io/)进行可视化的调用链路查看及耗时分析。
 
 使用效果如下图所示：
+![zipkin](https://zipkin.io/public/img/web-screenshot.png)
 
 ### 6.配置中心
 使用配置中心是为了统一管理配置, 快速切换各个环境的配置。
@@ -131,10 +132,10 @@ Spring Cloud使用[Config Server](http://cloud.spring.io/spring-cloud-config/)�
 
 下面演示更新配置后通知服务更新配置。
 * 商品服务的当前环境
-![6-1](material/6-1.png)
 ![6-1-1](material/6-1-1.png)
+![6-1](material/6-1.png)
 
-* 修改环境信息
+* 修改环境信息</br>
 ![6-2](material/6-2.png)
 
 * 发送更新通知
