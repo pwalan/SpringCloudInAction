@@ -31,33 +31,32 @@
 为什么需要服务注册中心：
 > 微服务应用和机器越来越多，调用方需要知道接口的网络地址，如果靠配置文件的方式去控制网络地址，对于动态新增机器，维护带来很大问题
 
-主流的注册中心：
-> Zookeeper、Eureka、Consul、Etcd等
+主流的注册中心：Zookeeper、Eureka、Consul、Etcd等
 
 如何选择：
 > CAP的定理，在一个分布式系统中，Consistency（一致性）、 Availability（可用性）、Partition tolerance（分区容错性），三者不可同时获得。
 
 由于当前的网络硬件肯定会出现延迟丢包等问题，所以分区容忍性(P)是我们必须需要实现的。所以我们只能在一致性(C)和可用性(A)之间进行权衡：
->* 如果要求一致性，则选择Zookeeper(CP)，如金融行业
->* 如果要求可用性，则Eureka(AP)，如电商系统
+* 如果要求一致性，则选择Zookeeper(CP)，如金融行业
+* 如果要求可用性，则Eureka(AP)，如电商系统
 
 ### 2.服务消费者与负载均衡
 常用的服务间调用的方式有：
->* RPC: 远程过程调用，像调用本地服务(方法)一样调用服务器的服务,支持同步、异步调用，数据包小
->* REST: 即HTTP请求，支持多种协议和功能，开发方便，成本低，但数据包大
+* RPC: 远程过程调用，像调用本地服务(方法)一样调用服务器的服务,支持同步、异步调用，数据包小
+* REST: 即HTTP请求，支持多种协议和功能，开发方便，成本低，但数据包大
 
 SpringCloud中有Ribbon和Feign两个组件支持服务间调用，二者都是采用REST方式，但由于以下原因一般选用Feign
->* Feign默认集成了Ribbon，也集成了Ribbon的负载均衡策略
->* 写起来更加思路清晰和方便
->* 采用注解方式进行配置，配置熔断(下一节将介绍)等方式方便
+* Feign默认集成了Ribbon，也集成了Ribbon的负载均衡策略
+* 写起来更加思路清晰和方便
+* 采用注解方式进行配置，配置熔断(下一节将介绍)等方式方便
 
 下面介绍一下Ribbon的负载均衡策略，默认是Round-Robin，不过可以通过配置文件进行设置，也可以[自定义负载均衡策略](http://cloud.spring.io/spring-cloud-static/Finchley.RELEASE/single/spring-cloud.html#_customizing_the_ribbon_client_by_setting_properties)。如下图所示，在Eureka上注册了3个商品服务，然后进行多次查询商品详情，可以看到每次请求都是不同的端口,而且是有序的，说明了其负载均衡策略是Round-Robin。
 
 
 下面说明一下使用Feign后，订单服务如何调用商品服务进行下单：
->* 在启动类中添加 ```@EnableFeignClients```
->* 在service包中添加一个商品服务的接口，并添加```@FeignClient(name="product-service")```，如下图所示![interface](material/2-interface.png)
->* 在要用到商品服务的地方进行注入，然后调用即可，如下图所示![interface](material/2-autowired.png)
+* 在启动类中添加 ```@EnableFeignClients```
+* 在service包中添加一个商品服务的接口，并添加```@FeignClient(name="product-service")```，如下图所示![interface](material/2-interface.png)
+* 在要用到商品服务的地方进行注入，然后调用即可，如下图所示![interface](material/2-autowired.png)
 
 
 ### 3.服务降级与熔断
