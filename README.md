@@ -74,7 +74,7 @@ SpringCloud中有Ribbon和Feign两个组件支持服务间调用，二者都是�
 * 服务熔断一般是下游服务故障导致的
 * 服务降级一般是从整体系统负荷考虑，由调用方控制
 
-SpringCloud中熔断降级一般使用[Hystrix](https://github.com/Netflix/Hystrix)
+SpringCloud中熔断降级一般使用[Hystrix](https://github.com/Netflix/Hystrix)。
 
 ### 4.微服务网关
 
