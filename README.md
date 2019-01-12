@@ -45,7 +45,7 @@
 * RPC: 远程过程调用，像调用本地服务(方法)一样调用服务器的服务,支持同步、异步调用，数据包小
 * REST: 即HTTP请求，支持多种协议和功能，开发方便，成本低，但数据包大
 
-SpringCloud中有Ribbon和Feign两个组件支持服务间调用，二者都是采用REST方式，但由于以下原因一般选用Feign
+Spring Cloud中有Ribbon和Feign两个组件支持服务间调用，二者都是采用REST方式，但由于以下原因一般选用Feign
 * Feign默认集成了Ribbon，也集成了Ribbon的负载均衡策略
 * 写起来更加思路清晰和方便
 * 采用注解方式进行配置，配置熔断(下一节将介绍)等方式方便
@@ -74,7 +74,7 @@ SpringCloud中有Ribbon和Feign两个组件支持服务间调用，二者都是�
 * 服务熔断一般是下游服务故障导致的
 * 服务降级一般是从整体系统负荷考虑，由调用方控制
 
-SpringCloud中熔断降级一般使用[Hystrix](https://github.com/Netflix/Hystrix)。
+Spring Cloud中熔断降级一般使用[Hystrix](https://github.com/Netflix/Hystrix)。
 
 ### 4.微服务网关
 
