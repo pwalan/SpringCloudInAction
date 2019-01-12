@@ -46,11 +46,11 @@
 * REST: 即HTTP请求，支持多种协议和功能，开发方便，成本低，但数据包大
 
 Spring Cloud中有Ribbon和Feign两个组件支持服务间调用，二者都是采用REST方式，但由于以下原因一般选用Feign
-* Feign默认集成了Ribbon，也集成了Ribbon的负载均衡策略
+* Feign默认集成了Ribbon，自然也集成了Ribbon的负载均衡策略
 * 写起来更加思路清晰和方便
 * 采用注解方式进行配置，配置熔断(下一节将介绍)等方式方便
 
-下面介绍一下Ribbon的负载均衡策略，默认是Round-Robin，不过可以通过配置文件进行设置，也可以[自定义负载均衡策略](http://cloud.spring.io/spring-cloud-static/Finchley.RELEASE/single/spring-cloud.html#_customizing_the_ribbon_client_by_setting_properties)。如下图所示，在Eureka上注册了3个商品服务，然后进行多次查询商品详情，可以看到每次请求都是不同的端口,而且是有序的，说明了其负载均衡策略是Round-Robin。
+Ribbon的负载均衡策略，默认是Round-Robin，不过可以通过配置文件进行设置，也可以[自定义负载均衡策略](http://cloud.spring.io/spring-cloud-static/Finchley.RELEASE/single/spring-cloud.html#_customizing_the_ribbon_client_by_setting_properties)。如下图所示，在Eureka上注册了3个商品服务，然后进行多次查询商品详情，可以看到每次请求都是不同的端口,而且是有序的，说明了其负载均衡策略是Round-Robin。
 
 
 下面说明一下使用Feign后，订单服务如何调用商品服务进行下单：
